@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NovaBank Demo - Concept UI for Portfolio</title>
+<title>NovaBank</title>
 <style>
   :root {
     --bg: #f0f4f8; --card: white; --text: #1a1a1a; --sub: #64748b;
@@ -55,20 +55,18 @@
 <div class="card" id="loginBox">
   <div class="logo-wrap" onclick="goHome()">
     <div class="logo">N</div>
-    <h1>NovaBank Demo</h1>
+    <h1>NovaBank</h1>
   </div>
-  <p class="subtitle">Concept UI Prototype - Not a real bank or financial service</p>
+  <p class="subtitle">bank or financial service</p>
   <input type="text" id="user" placeholder="Username">
   <input type="password" id="pass" placeholder="Password">
   <button onclick="login()">Sign In</button>
   <p class="error" id="err">Wrong username or password</p>
-  <p class="footer">NovaBank Demo is a fictional concept UI for educational/portfolio purposes only. 
-  Not affiliated with any financial institution. No real money involved.</p>
+  <p class="footer">NovaBank 
+  
 </div>
 
-<div class="card dashboard" id="dashBox">
-  <div class="banner">⚠️ CONCEPT UI / LEARNING MODE - This is demo data only. Not connected to any real bank.</div>
-  
+<div class="card dashboard" id="dashBox">  
   <div class="top-bar">
     <div class="logo-wrap" onclick="logout()">
       <div class="logo">N</div>
@@ -77,30 +75,29 @@
     <button class="theme-btn" onclick="toggleTheme()">🌙 Dark</button>
   </div>
   
-  <span class="badge">DEMO ACCOUNT - FAKE DATA</span>
+  <span class="badge">ACCOUNT </span>
   
   <div class="balance-card">
     <p style="opacity:0.9; font-size:14px;">Available Balance - Demo</p>
     <div class="balance" id="balance">$1,000,000.00</div>
-    <p style="opacity:0.8; font-size:12px;">For learning purposes only</p>
   </div>
 
   <div class="btn-row">
-    <button class="btn-secondary" onclick="openModal('deposit')">Deposit Demo</button>
-    <button class="btn-secondary" onclick="openModal('withdraw')">Withdraw Demo</button>
-    <button class="btn-secondary" onclick="openModal('transfer')">Transfer Demo</button>
+    <button class="btn-secondary" onclick="openModal('deposit')">Deposit </button>
+    <button class="btn-secondary" onclick="openModal('withdraw')">Withdraw </button>
+    <button class="btn-secondary" onclick="openModal('transfer')">Transfer </button>
   </div>
 
   <div class="transactions">
     <div class="tx-title">
-      <span>Recent Transactions - Demo Data</span>
+      <span>Recent Transactions - Data</span>
       <input class="filter" id="search" placeholder="Search demo tx..." oninput="renderTransactions()" style="width:140px; margin:0; padding:6px; font-size:12px;">
     </div>
     <div id="txList"></div>
   </div>
 
   <button class="logout" onclick="logout()">Log Out</button>
-  <p class="footer">NovaBank Demo is fictional. All balances, transactions, and actions are simulated demo data for UI practice.</p>
+  <p class="footer">NovaBank is fictional. All balances, transactions, and actions are simulated</p>
 </div>
 
 <div class="modal" id="modal">
