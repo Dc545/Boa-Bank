@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaBank - Practice Dashboard</title>
+<style>
+  :root {
+    --bg: #f0f4f8; --card: white; --text: #1a1a1a; --sub: #64748b;
+    --border: #cbd5e1; --primary: #1e40af; --primary-dark: #1e3a8a;
+    --badge-bg: #fef3c7; --badge-text: #92400e;
+  }
+  [data-theme="dark"] {
+    --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --sub: #94a3b8;
+    --border: #334155; --primary: #3b82f6; --primary-dark: #2563eb;
+    --badge-bg: #422006; --badge-text: #fbbf24;
+  }
+    * { margin:0; padding:0; box-sizing:border-box; font-family: system-ui, sans-serif; }
+  body { background:var(--bg); color:var(--text); display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; transition:0.3s; }
+  .card { background:var(--card); padding:32px; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.2); width:100%; max-width:420px; }
+  .logo-wrap { display:flex; align-items:center; gap:12px; margin-bottom:12px; cursor:pointer; }
+  .logo { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,var(--primary),#3b82f6); display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:20px; }
+  h1 { font-size:26px; margin-bottom:6px; color:var(--text); }
+  .subtitle { color:var(--sub); font-size:13px; margin-bottom:24px; }
+  input { width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; margin-bottom:12px; font-size:16px; background:var(--bg); color:var(--text); }
+  button { width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:16px; }
+  button:hover { background:var(--primary-dark); }
+  .error { color:#dc2626; font-size:13px; margin-top:8px; display:none; }
+  .dashboard { display:none; }
+  .balance-card { background:linear-gradient(135deg,var(--primary),#3b82f6); color:white; padding:24px; border-radius:12px; margin:20px 0; text-align:center; }
+  .balance { font-size:38px; font-weight:700; margin:8px 0; }
+  .badge { background:var(--badge-bg); color:var(--badge-text); padding:4px 8px; border-radius:6px; font-size:12px; font-weight:700; display:inline-block; margin-bottom:12px; }
+  .logout { background:var(--border); color:var(--text); margin-top:12px; }
+  .btn-secondary { background:var(--bg); color:var(--primary); margin-top:8px; border:1px solid var(--border); }
+  .top-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .theme-btn { width:auto; padding:8px 12px; font-size:13px; }
+  .transactions { margin-top:20px; text-align:left; }
+  .tx-title { font-weight:600; margin-bottom:10px; font-size:15px; color:var(--text); }
+  .tx-item { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); font-size:14px; }
+  .tx-credit { color:#16a34a; font-weight:600; }
+  .tx-debit { color:#dc2626; font-weight:600; }
+  .tx-date { color:var(--sub); font-size:12px; }
+</style>
+</head>
+<body>
+
+<div class="card" id="loginBox">
+  <div class="logo-wrap" onclick="goHome()">
+    <div class="logo">N</div>
+    <h1>NovaBank</h1>
+  </div>
+  <input type="text" id="user" placeholder="Username">
+  <input type="password" id="pass" placeholder="Password">
+  <button onclick="login()">Sign In</button>
+  <p class="error" id="err">Wrong username or password</p>
+  <p style="font-size:12px; color:var(--sub); margin-top:16px;">Demo login: Jonathan Goana / goana545</p>
+</div>
+
+<div class="card dashboard" id="dashBox">
+  <div class="top-bar">
+    <div class="logo-wrap" onclick="logout()">
+      <div class="logo">N</div>
+      <h1>Hi, Jonathan</h1>
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()">🌙 Dark</button>
+  </div>
+  
+  <div class="balance-card">
+    <p style="opacity:0.9; font-size:14px;">Available Balance</p>
+    <div class="balance">$1,000,000.00</div>
+    <p style="opacity:0.8; font-size:12px;">For learning purposes only</p>
+  </div>
+
+  <div class="transactions">
+    <p class="tx-title">Recent Transactions - Demo Data</p>
+    <div class="tx-item">
+      <div><div>Salary Deposit</div><div class="tx-date">Jun 05, 2026</div></div>
+      <div class="tx-credit">+$50,000.00</div>
+    </div>
+    <div class="tx-item">
+      <div><div>Grocery Store</div><div class="tx-date">Jun 04, 2026</div></div>
+      <div class="tx-debit">-$120.50</div>
+    </div>
+    <div class="tx-item">
+      <div><div>Watch Purchase - Geneva</div><div class="tx-date">Jun 03, 2026</div></div>
+      <div class="tx-debit">-$3,500.00</div>
+    </div>
+    <div class="tx-item">
+      <div><div>Freelance Payment</div><div class="tx-date">Jun 01, 2026</div></div>
+      <div class="tx-credit">+$8,000.00</div>
+    </div>
+  </div>
+
+  <button class="btn-secondary" onclick="fakeTransfer()">Transfer Money</button>
+  <button class="logout" onclick="logout()">Log Out</button>
+</div>
+
+<script>
+const DEMO_USER = "Jonathan Goana";
+const DEMO_PASS = "goana545";
+
+function login() {
+  const u = document.getElementById('user').value;
+  const p = document.getElementById('pass').value;
+  if(u === DEMO_USER && p === DEMO_PASS) {
+    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('dashBox').style.display = 'block';
+  } else {
+    document.getElementById('err').style.display = 'block';
+  }
+}
+
+function logout() {
+  document.getElementById('dashBox').style.display = 'none';
+  document.getElementById('loginBox').style.display = 'block';
+  document.getElementById('user').value = '';
+  document.getElementById('pass').value = '';
+  document.getElementById('err').style.display = 'none';
+}
+
+function goHome() {
+  if(document.getElementById('dashBox').style.display === 'block') logout();
+}
+
+function fakeTransfer() {
+  alert('Demo Mode: Transfers are disabled. This is fake UI for learning only.');
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.querySelector('.theme-btn');
+  if(html.getAttribute('data-theme') === 'dark') {
+    html.removeAttribute('data-theme');
+    btn.textContent = '🌙 Dark';
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀️ Light';
+  }
+}
+</script>
+
+</body>
+</html>
