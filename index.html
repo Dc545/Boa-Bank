@@ -17,7 +17,7 @@
   }
     * { margin:0; padding:0; box-sizing:border-box; font-family: system-ui, sans-serif; }
   body { background:var(--bg); color:var(--text); display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; transition:0.3s; }
-  .card { background:var(--card); padding:32px; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.2); width:100%; max-width:420px; }
+  .card { background:var(--card); padding:32px; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.2); width:100%; max-width:440px; }
   .logo-wrap { display:flex; align-items:center; gap:12px; margin-bottom:12px; cursor:pointer; }
   .logo { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,var(--primary),#3b82f6); display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:20px; }
   h1 { font-size:26px; margin-bottom:6px; color:var(--text); }
@@ -31,15 +31,19 @@
   .balance { font-size:38px; font-weight:700; margin:8px 0; }
   .badge { background:var(--badge-bg); color:var(--badge-text); padding:4px 8px; border-radius:6px; font-size:12px; font-weight:700; display:inline-block; margin-bottom:12px; }
   .logout { background:var(--border); color:var(--text); margin-top:12px; }
-  .btn-secondary { background:var(--bg); color:var(--primary); margin-top:8px; border:1px solid var(--border); }
+  .btn-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:16px 0; }
+  .btn-secondary { background:var(--bg); color:var(--primary); border:1px solid var(--border); font-size:14px; padding:10px; }
   .top-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
   .theme-btn { width:auto; padding:8px 12px; font-size:13px; }
-  .transactions { margin-top:20px; text-align:left; }
+  .transactions { margin-top:20px; text-align:left; max-height:240px; overflow-y:auto; }
   .tx-title { font-weight:600; margin-bottom:10px; font-size:15px; color:var(--text); }
   .tx-item { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); font-size:14px; }
   .tx-credit { color:#16a34a; font-weight:600; }
   .tx-debit { color:#dc2626; font-weight:600; }
   .tx-date { color:var(--sub); font-size:12px; }
+  .footer { font-size:11px; color:var(--sub); margin-top:20px; text-align:center; line-height:1.4; }
+  .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; }
+  .modal-content { background:var(--card); padding:24px; border-radius:12px; width:90%; max-width:340px; }
 </style>
 </head>
 <body>
@@ -49,11 +53,11 @@
     <div class="logo">N</div>
     <h1>NovaBank</h1>
   </div>
+  <p class="subtitle">NovaBank
   <input type="text" id="user" placeholder="Username">
   <input type="password" id="pass" placeholder="Password">
   <button onclick="login()">Sign In</button>
   <p class="error" id="err">Wrong username or password</p>
-  <p style="font-size:12px; color:var(--sub); margin-top:16px;">Demo login: Jonathan Goana / goana545</p>
 </div>
 
 <div class="card dashboard" id="dashBox">
@@ -64,44 +68,57 @@
     </div>
     <button class="theme-btn" onclick="toggleTheme()">🌙 Dark</button>
   </div>
+  <span class="badge">ACCOUNT </span>
   
   <div class="balance-card">
-    <p style="opacity:0.9; font-size:14px;">Available Balance</p>
-    <div class="balance">$1,000,000.00</div>
-    <p style="opacity:0.8; font-size:12px;">
+    <p style="opacity:0.9; font-size:14px;">Available Balance - Demo</p>
+    <div class="balance" id="balance">$1,000,000.00</div>
+    <p style="opacity:0.8; font-size:12px;">For learning purposes only</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="openModal('deposit')">Deposit</button>
+    <button class="btn-secondary" onclick="openModal('withdraw')">Withdraw</button>
+    <button class="btn-secondary" onclick="openModal('transfer')">Transfer</button>
   </div>
 
   <div class="transactions">
     <p class="tx-title">Recent Transactions - Demo Data</p>
-    <div class="tx-item">
-      <div><div>Salary Deposit</div><div class="tx-date">Jun 05, 2026</div></div>
-      <div class="tx-credit">+$50,000.00</div>
-    </div>
-    <div class="tx-item">
-      <div><div>Grocery Store</div><div class="tx-date">Jun 04, 2026</div></div>
-      <div class="tx-debit">-$120.50</div>
-    </div>
-    <div class="tx-item">
-      <div><div>Watch Purchase - Geneva</div><div class="tx-date">Jun 03, 2026</div></div>
-      <div class="tx-debit">-$3,500.00</div>
-    </div>
-    <div class="tx-item">
-      <div><div>Freelance Payment</div><div class="tx-date">Jun 01, 2026</div></div>
-      <div class="tx-credit">+$8,000.00</div>
-    </div>
+    <div id="txList"></div>
   </div>
 
-  <button class="btn-secondary" onclick="fakeTransfer()">Transfer Money</button>
   <button class="logout" onclick="logout()">Log Out</button>
 </div>
 
+<!-- Demo Modal -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3 id="modalTitle" style="margin-bottom:12px;">Demo Action</h3>
+    <input type="number" id="amount" placeholder="Enter demo amount" step="0.01">
+    <button onclick="confirmAction()" style="margin-top:12px;">Confirm Demo</button>
+    <button class="btn-secondary" onclick="closeModal()" style="margin-top:8px;">Cancel</button>
+  </div>
+</div>
+
 <script>
+const DEMO_USER = "Jonathan Goana";
+const DEMO_PASS = "goana545";
+let balance = 1000000.00;
+let transactions = [
+  {type:'credit', desc:'Salary Deposit', date:'Jun 05, 2026', amt:50000},
+  {type:'debit', desc:'Grocery Store', date:'Jun 04, 2026', amt:120.50},
+  {type:'debit', desc:'Watch Purchase - Geneva', date:'Jun 03, 2026', amt:3500},
+  {type:'credit', desc:'Freelance Payment', date:'Jun 01, 2026', amt:8000}
+];
+let currentAction = '';
+
 function login() {
   const u = document.getElementById('user').value;
   const p = document.getElementById('pass').value;
   if(u === DEMO_USER && p === DEMO_PASS) {
     document.getElementById('loginBox').style.display = 'none';
     document.getElementById('dashBox').style.display = 'block';
+    renderTransactions();
   } else {
     document.getElementById('err').style.display = 'block';
   }
@@ -119,6 +136,54 @@ function goHome() {
   if(document.getElementById('dashBox').style.display === 'block') logout();
 }
 
+function renderTransactions() {
+  const list = document.getElementById('txList');
+  list.innerHTML = '';
+  transactions.forEach(tx => {
+    const div = document.createElement('div');
+    div.className = 'tx-item';
+    div.innerHTML = `
+      <div><div>${tx.desc} - Demo</div><div class="tx-date">${tx.date}</div></div>
+      <div class="${tx.type==='credit'?'tx-credit':'tx-debit'}">
+        ${tx.type==='credit'?'+':'-'}$${tx.amt.toLocaleString()}
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function openModal(action) {
+  currentAction = action;
+  document.getElementById('modalTitle').textContent = `Demo ${action.charAt(0).toUpperCase()+action.slice(1)}`;
+  document.getElementById('amount').value = '';
+  document.getElementById('modal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+function confirmAction() {
+  const amt = parseFloat(document.getElementById('amount').value);
+  if(!amt || amt<=0) { alert('Enter a valid demo amount'); return; }
+  
+  const today = new Date().toLocaleDateString('en-US', {month:'short', day:'2-digit', year:'numeric'});
+  
+  if(currentAction==='deposit') {
+    balance += amt;
+    transactions.unshift({type:'credit', desc:'Demo Deposit', date:today, amt:amt});
+  } else if(currentAction==='withdraw') {
+    if(amt>balance) { alert('Demo: Insufficient fake funds'); return; }
+    balance -= amt;
+    transactions.unshift({type:'debit', desc:'Demo Withdrawal', date:today, amt:amt});
+  } else {
+    alert('Demo: Transfer simulated. No real money moved.');
+    transactions.unshift({type:'debit', desc:'Demo Transfer', date:today, amt:amt});
+    balance -= amt;
+  }
+  
+  document.getElementById('balance').textContent = '$' + balance.toLocaleString(undefined,{minimumFractionDigits:2});
+  renderTransactions();
+  closeModal();
 }
 
 function toggleTheme() {
