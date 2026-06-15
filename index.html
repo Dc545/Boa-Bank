@@ -70,7 +70,7 @@
   <div class="top-bar">
     <div class="logo-wrap" onclick="logout()">
       <div class="logo">N</div>
-      <h1>Hi, Jonathan</h1>
+      <h1>Hi, Michael</h1>
     </div>
     <button class="theme-btn" onclick="toggleTheme()">🌙 Dark</button>
   </div>
@@ -78,8 +78,8 @@
   <span class="badge">ACCOUNT </span>
   
   <div class="balance-card">
-    <p style="opacity:0.9; font-size:14px;">Available Balance - Demo</p>
-    <div class="balance" id="balance">$1,000,000.00</div>
+    <p style="opacity:0.9; font-size:14px;">Available Balance -</p>
+    <div class="balance" id="balance">$1,000,000,000.00</div>
   </div>
 
   <div class="btn-row">
@@ -97,7 +97,7 @@
   </div>
 
   <button class="logout" onclick="logout()">Log Out</button>
-  <p class="footer">NovaBank is fictional. All balances, transactions, and actions are simulated</p>
+  <p class="footer">BOA is fictional. All balances, transactions, and actions are simulated</p>
 </div>
 
 <div class="modal" id="modal">
@@ -114,7 +114,7 @@ const DEMO_USER = "Jonathan Goana";
 const DEMO_PASS = "goana545";
 let balance = 1000000.00;
 let transactions = [
-  {type:'credit', desc:'Salary Deposit', date:'Jun 05, 2026', amt:50000},
+  {type:'credit', desc:'Salary Deposit', date:'Jun 05, 2026', amt:5000000000},
   {type:'debit', desc:'Grocery Store', date:'Jun 04, 2026', amt:120.50},
   {type:'debit', desc:'Watch Purchase - Geneva', date:'Jun 03, 2026', amt:3500},
   {type:'credit', desc:'Freelance Payment', date:'Jun 01, 2026', amt:8000}
@@ -190,14 +190,13 @@ function confirmAction() {
   
   if(currentAction==='deposit') {
     balance += amt;
-    transactions.unshift({type:'credit', desc:'Demo Deposit', date:today, amt:amt});
+    transactions.unshift({type:'credit', desc:'Deposit', date:today, amt:amt});
   } else if(currentAction==='withdraw') {
     if(amt>balance) { alert('Demo: Insufficient fake funds'); return; }
     balance -= amt;
-    transactions.unshift({type:'debit', desc:'Demo Withdrawal', date:today, amt:amt});
-  } else {
-    alert('Demo: Transfer simulated. No real money moved.');
-    transactions.unshift({type:'debit', desc:'Demo Transfer', date:today, amt:amt});
+    transactions.unshift({type:'debit', desc:'Withdrawal', date:today, amt:amt});
+  } else
+    transactions.unshift({type:'debit', desc:'Transfer', date:today, amt:amt});
     balance -= amt;
   }
   
